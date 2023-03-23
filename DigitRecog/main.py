@@ -12,17 +12,25 @@ x_test = tf.keras.utils.normalize(x_test, axis=1)
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(28, 28)))
-model.add(tf.keras.layers.Dense(units=128, activation = tf.nn.relu))
-model.add(tf.keras.layers.Dense(units=128, activation = tf.nn.relu))
-model.add(tf.keras.layers.Dense(units=10, activation=tf.nn.softmax))
+model.add(tf.keras.layers.Dense(units=256, activation = 'relu'))
+model.add(tf.keras.layers.Dense(units=256, activation = 'relu'))
+model.add(tf.keras.layers.Dense(units=10, activation= 'softmax'))
 
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-model.fit(x_train, y_train, epochs=100)
+model.fit(x_train, y_train, epochs=10)
 
-accuracy, loss = model.evaluate(x_test, y_test)
+loss, accuracy = model.evaluate(x_test, y_test)
 print(accuracy)
 print(loss)
 
 model.save('digits.model')
+
+for i in range(1, 3):
+    img = cv.imread(f'{i}.png')[:, :, 0]
+    img = np.invert(np.array([img]))
+    plt.imshow(img[0], cmap=plt.cm.binary)
+    plt.show()
+    prediction = model.predict(img)
+    print(f'LMAO LOOKS LIKE: {np.argmax(prediction)}')
 
